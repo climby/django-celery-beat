@@ -1,5 +1,5 @@
 """Periodic Task Admin interface."""
-from celery import current_app
+from celery import Task 
 from celery.utils import cached_property
 from django import forms
 from django.conf import settings
@@ -18,7 +18,7 @@ from .utils import is_database_scheduler
 class TaskSelectWidget(Select):
     """Widget that lets you choose between task names."""
 
-    celery_app = current_app
+    celery_app = Task.app
     _choices = None
 
     def tasks_as_choices(self):
@@ -111,7 +111,7 @@ class PeriodicTaskAdmin(admin.ModelAdmin):
 
     form = PeriodicTaskForm
     model = PeriodicTask
-    celery_app = current_app
+    celery_app = Task.app
     date_hierarchy = 'start_time'
     list_display = ('name', 'enabled', 'scheduler', 'interval', 'start_time',
                     'last_run_at', 'one_off')
